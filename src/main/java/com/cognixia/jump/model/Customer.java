@@ -28,9 +28,6 @@ public class Customer implements Serializable {
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private List<Account> accounts;
 	
-	public Customer() {
-		this(-1, "N/A", "0000", "invalidUser", "kmdsdm", new ArrayList<Account>());
-	}
 
 	public Customer(Integer id, String fullName, String pin, String username, String password, List<Account> accounts) {
 		super();
@@ -82,13 +79,6 @@ public class Customer implements Serializable {
 		this.password = password;
 	}
 
-	public List<Account> getAccounts() {
-		return accounts;
-	}
-
-	public void setAccounts(List<Account> accounts) {
-		this.accounts = accounts;
-	}
 	
 	
 	
