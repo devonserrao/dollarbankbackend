@@ -48,4 +48,22 @@ public class CustomerController {
 		return ResponseEntity.status(201).body(addedCust);
 	}
 	
+	@GetMapping("/customer/{id}/totalbalance")
+	public ResponseEntity<?> getFullBalanceFromAllAccounts(@PathVariable int id) {
+		if(repo.existsById(id)) {
+			double totalBalance = 0.0;
+			
+			for(Account acc: repo.getById(id).getAccounts()) {
+				totalBalance += acc.getBalance();
+			}
+			
+			return ResponseEntity.status(200).body(totalBalance);
+		}
+		
+		return ResponseEntity.status(400)
+								.body("Couldn't find Customer with id = " + id + "to retrieve total balance!");
+		
+		
+		
+	}
 }
