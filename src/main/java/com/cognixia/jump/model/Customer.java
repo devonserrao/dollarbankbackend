@@ -28,20 +28,31 @@ public class Customer implements Serializable {
 	
 	private String password;
 	
+	private List<String> transactionList;
+	
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private List<Account> accounts;
 	
 	public Customer() {
-		this(-1, "N/A", "0000", "invalidUser", "kmdsdm", new ArrayList<Account>());
+		this(-1, "N/A", "0000", "invalidUser", "kmdsdm", new ArrayList<String>(), new ArrayList<Account>());
 	}
 
-	public Customer(Integer id, String fullName, String pin, String username, String password, List<Account> accounts) {
+	public List<String> getTransactionList() {
+		return transactionList;
+	}
+
+	public void setTransactionList(List<String> transactionList) {
+		this.transactionList = transactionList;
+	}
+
+	public Customer(Integer id, String fullName, String pin, String username, String password, List<String> transactionList, List<Account> accounts) {
 		super();
 		this.id = id;
 		this.fullName = fullName;
 		this.pin = pin;
 		this.username = username;
 		this.password = password;
+		this.transactionList = transactionList;
 		this.accounts = accounts;
 	}
 
@@ -91,6 +102,12 @@ public class Customer implements Serializable {
 
 	public void setAccounts(List<Account> accounts) {
 		this.accounts = accounts;
+	}
+
+	@Override
+	public String toString() {
+		return "Customer [id=" + id + ", fullName=" + fullName + ", pin=" + pin + ", username=" + username
+				+ ", password=" + password + ", transactionList=" + transactionList + ", accounts=" + accounts + "]";
 	}
 	
 	
