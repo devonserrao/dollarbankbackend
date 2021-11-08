@@ -1,5 +1,6 @@
 package com.cognixia.jump.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,19 @@ public class CustomerController {
 		
 	}
 	
-	
+	@GetMapping("/customer/{id}/latesttransactions")
+	public ResponseEntity<?> getLastFiveTransactions(@PathVariable int id) {
+		if(repo.existsById(id)) {
+			List<String> transactions = repo.getById(id).getTransactionList();
+			
+			List<String> lastFiveTransactions = transactions.subList(transactions.size()-5, transactions.size()); 
+			
+			return ResponseEntity.status(200).body(lastFiveTransactions);
+		}
+		
+		return ResponseEntity.status(400)
+				.body("Couldn't find Customer with id = " + id + "to retrieve their transactions!");
+
+	}
 	
 }
