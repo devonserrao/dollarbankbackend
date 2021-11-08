@@ -71,7 +71,14 @@ public class CustomerController {
 		if(repo.existsById(id)) {
 			List<String> transactions = repo.getById(id).getTransactionList();
 			
-			List<String> lastFiveTransactions = transactions.subList(transactions.size()-5, transactions.size()); 
+			// This ensures starting index of slice will not go out of bounds
+			//			=> EG: length was only 3 : nthIndexFromEnd ensures that only 3 transactions displayed and doesnt cause OutOfBoundsException
+			int nthIndexFromEnd = (transactions.size() >= 5) ? 5: transactions.size();	
+			
+			// Retrieves a slice of transactions from the 5th latest to the last transaction made.
+			//			=> Eg: {'D: 56', 'W: 30','D: 56', 'W: 30','D: 56', 'W: 24' }
+			//						[Will Produce => {'W: 30','D: 56', 'W: 30','D: 56', 'W: 24' }]
+			List<String> lastFiveTransactions = transactions.subList(transactions.size()-nthIndexFromEnd, transactions.size()); 
 			
 			return ResponseEntity.status(200).body(lastFiveTransactions);
 		}
