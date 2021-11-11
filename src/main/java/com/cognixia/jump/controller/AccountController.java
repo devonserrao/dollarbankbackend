@@ -63,7 +63,4 @@ public class AccountController {
 		// TODO
 		return ResponseEntity.status(200).body("Money has been transferred from the other account!");
 	}
-	// Withdraw
-	// Deposit
-	// Transfer between accounts
 }
