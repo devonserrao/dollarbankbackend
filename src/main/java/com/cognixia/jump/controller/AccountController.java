@@ -26,9 +26,25 @@ public class AccountController {
 	}
 	
 	@PutMapping("/account/{id}/deposit/{amount}")
-	public ResponseEntity<?> depositAmount(@PathVariable int id, @PathVariable double depositAmount) {
+	public ResponseEntity<?> depositMoney(@PathVariable int id, @PathVariable double depositAmount) {
 		if(repo.existsById(id)) {
 			repo.getById(id).setBalance(repo.getById(id).getBalance() + depositAmount);
+			
+			double updatedBalance = repo.getById(id).getBalance();
+			return ResponseEntity.status(200).body(updatedBalance);
+		}
+		
+		return ResponseEntity.status(400).body("Couldn't find Account with id = " + id + "to deposit amount!");
+	} 
+	
+	@PutMapping("/account/{id}/withdraw/{amount}")
+	public ResponseEntity<?> withdrawMoney(@PathVariable int id, @PathVariable double withdrawAmount) {
+		if(repo.existsById(id)) {
+			if(repo.getById(id).getBalance() < withdrawAmount) {
+				return ResponseEntity.status(400).body("Cannot withdraw " + withdrawAmount + " as there isn't enough money in the account!");
+			}
+				
+			repo.getById(id).setBalance(repo.getById(id).getBalance() - withdrawAmount);
 			
 			double updatedBalance = repo.getById(id).getBalance();
 			return ResponseEntity.status(200).body(updatedBalance);
