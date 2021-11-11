@@ -2,6 +2,8 @@ package com.cognixia.jump.controller;
 
 import java.util.List;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,6 +54,15 @@ public class AccountController {
 		
 		return ResponseEntity.status(400).body("Couldn't find Account with id = " + id + "to deposit amount!");
 	} 
+	
+	@PutMapping("/account/transfer")
+	public ResponseEntity<?> transferMoneybetweenAccounts(@PathParam(value = "accountId1") int accountId1 ,
+			@PathParam(value = "accountId2") int accountId2,
+			@PathParam(value = "transferAmount") double transferAmount) {
+		
+		// TODO
+		return ResponseEntity.status(200).body("Money has been transferred from the other account!");
+	}
 	// Withdraw
 	// Deposit
 	// Transfer between accounts
