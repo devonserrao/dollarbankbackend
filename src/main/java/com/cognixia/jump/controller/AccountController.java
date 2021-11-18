@@ -34,7 +34,7 @@ public class AccountController {
 	
 	@PutMapping("/account/{id}/deposit/{amount}")
 	public ResponseEntity<?> depositMoney(@PathVariable int id, @PathVariable double depositAmount) throws NegativeAmountException, ResourceNotFoundException {
-		if(depositAmount < 0.01) {
+		if(depositAmount < 0) {
 			throw new NegativeAmountException("Please enter a non-negative amount!");
 		}
 		
@@ -69,9 +69,24 @@ public class AccountController {
 			@PathParam(value = "accountId2") int accountId2,
 			@PathParam(value = "transferAmount") double transferAmount) throws ResourceNotFoundException, NegativeAmountException, OverdraftException {
 		
+		if(!repo.existsById(accountId1) || !repo.existsById(accountId2) )
+			throw new ResourceNotFoundException("One of the accounts doesnt exist!");
 		
-		return ResponseEntity.status(200).body("Money has been transferred from the other account!");
-		// for failing to find either account id
-		// return ResponseEntity.status(404).body("Couldn't find Account with id = " + accountId1 + "to deposit amount!");
+		// if reach here - means both accounts exist
+		
+		if(transferAmount < 0) 
+			throw new NegativeAmountException("Enter a non-negative transfer amount.");
+		
+		if(transferAmount > repo.getById(accountId1).getBalance())
+			throw new OverdraftException("Not enough money in main account 1!");
+		
+		repo.getById(accountId1).setBalance(repo.getById(accountId1).getBalance() - transferAmount);
+		repo.getById(accountId2).setBalance(repo.getById(accountId2).getBalance() + transferAmount);
+	
+		double updatedAccount1Balance = repo.getById(accountId1).getBalance();
+		double updatedAccount2Balance = repo.getById(accountId2).getBalance();
+		
+		return ResponseEntity.status(200).body("Updated Account 1 Balance : " + updatedAccount1Balance + "\nUpdated Account 2 Balance : " + updatedAccount2Balance);
+		
 	}
 }
