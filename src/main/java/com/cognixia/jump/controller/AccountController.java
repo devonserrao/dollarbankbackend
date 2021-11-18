@@ -65,9 +65,9 @@ public class AccountController {
 	@PutMapping("/account/transfer")
 	public ResponseEntity<?> transferMoneybetweenAccounts(@PathParam(value = "accountId1") int accountId1 ,
 			@PathParam(value = "accountId2") int accountId2,
-			@PathParam(value = "transferAmount") double transferAmount) {
+			@PathParam(value = "transferAmount") double transferAmount) throws ResourceNotFoundException, NegativeAmountException, OverdraftException {
 		
-		// TODO
+		
 		return ResponseEntity.status(200).body("Money has been transferred from the other account!");
 		// for failing to find either account id
 		// return ResponseEntity.status(404).body("Couldn't find Account with id = " + accountId1 + "to deposit amount!");
