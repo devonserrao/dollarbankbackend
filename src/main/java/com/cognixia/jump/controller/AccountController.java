@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cognixia.jump.exception.NegativeAmountException;
+import com.cognixia.jump.exception.OverdraftException;
+import com.cognixia.jump.exception.ResourceNotFoundException;
 import com.cognixia.jump.model.Account;
 import com.cognixia.jump.repository.AccountRepository;
 
@@ -29,7 +31,7 @@ public class AccountController {
 	}
 	
 	@PutMapping("/account/{id}/deposit/{amount}")
-	public ResponseEntity<?> depositMoney(@PathVariable int id, @PathVariable double depositAmount) throws NegativeAmountException {
+	public ResponseEntity<?> depositMoney(@PathVariable int id, @PathVariable double depositAmount) throws NegativeAmountException, ResourceNotFoundException {
 		if(depositAmount < 0.01) {
 			throw new NegativeAmountException("Please enter a non-negative amount!");
 		}
@@ -41,14 +43,14 @@ public class AccountController {
 			return ResponseEntity.status(200).body(updatedBalance);
 		}
 		
-		return ResponseEntity.status(400).body("Couldn't find Account with id = " + id + "to deposit amount!");
+		throw new ResourceNotFoundException("Couldn't find Account with id = " + id + "to deposit amount!");
 	} 
 	
 	@PutMapping("/account/{id}/withdraw/{amount}")
-	public ResponseEntity<?> withdrawMoney(@PathVariable int id, @PathVariable double withdrawAmount) throws NegativeAmountException {
+	public ResponseEntity<?> withdrawMoney(@PathVariable int id, @PathVariable double withdrawAmount) throws NegativeAmountException, OverdraftException, ResourceNotFoundException {
 		if(repo.existsById(id)) {
 			if(repo.getById(id).getBalance() < withdrawAmount) {
-				return ResponseEntity.status(400).body("Cannot withdraw " + withdrawAmount + " as there isn't enough money in the account!");
+				throw new OverdraftException("Cannot withdraw " + withdrawAmount + " as there isn't enough money in the account!");
 			}
 				
 			repo.getById(id).setBalance(repo.getById(id).getBalance() - withdrawAmount);
@@ -57,7 +59,7 @@ public class AccountController {
 			return ResponseEntity.status(200).body(updatedBalance);
 		}
 		
-		return ResponseEntity.status(400).body("Couldn't find Account with id = " + id + "to deposit amount!");
+		throw new ResourceNotFoundException("Couldn't find Account with id = " + id + "to deposit amount!");
 	} 
 	
 	@PutMapping("/account/transfer")
