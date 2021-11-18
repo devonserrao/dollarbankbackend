@@ -65,9 +65,9 @@ public class AccountController {
 	} 
 	
 	@PutMapping("/account/transfer")
-	public ResponseEntity<?> transferMoneyBetweenAccounts(@PathParam(value = "accountId1") int accountId1 ,
-			@PathParam(value = "accountId2") int accountId2,
-			@PathParam(value = "transferAmount") double transferAmount) throws ResourceNotFoundException, NegativeAmountException, OverdraftException {
+	public ResponseEntity<?> transferMoneyBetweenAccounts(@PathParam(value = "accountId1") Integer accountId1 ,
+			@PathParam(value = "accountId2") Integer accountId2,
+			@PathParam(value = "transferAmount") Double transferAmount) throws ResourceNotFoundException, NegativeAmountException, OverdraftException {
 		
 		if(!repo.existsById(accountId1) || !repo.existsById(accountId2) )
 			throw new ResourceNotFoundException("One of the accounts doesnt exist!");
